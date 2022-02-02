@@ -1,4 +1,4 @@
-const Product = require('../../models/Product');
+const Product = require("../../models/Product");
 
 exports.fetchProduct = async (productId, next) => {
   try {
@@ -20,6 +20,12 @@ exports.getProducts = async (req, res) => {
 
 exports.productCreate = async (req, res) => {
   try {
+    //Check if there is an image by using if(request contains file) statement
+    if (req.file) {
+      //If image exists store file path in URL body
+      //The path must include the request's protocol http and the host req.get("host") followed by media and the file's name
+      req.body.image = `${req.protocol}://${req.get("host")}/${req.file.path}`;
+    }
     const newProduct = await Product.create(req.body);
     return res.status(201).json(newProduct);
   } catch (error) {
@@ -38,6 +44,12 @@ exports.productDelete = async (req, res, next) => {
 
 exports.productUpdate = async (req, res, next) => {
   try {
+    //Check if there is an image by using if(request contains file) statement
+    if (req.file) {
+      //If image exists store file path in URL body
+      //The path must include the request's protocol http and the host req.get("host") followed by media and the file's name
+      req.body.image = `${req.protocol}://${req.get("host")}/${req.file.path}`;
+    }
     const product = await Product.findByIdAndUpdate(
       { _id: req.product.id },
       req.body,
